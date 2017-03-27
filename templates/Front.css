@@ -1,0 +1,19 @@
+body {
+        font-family: sans-serif;
+        width:800px;
+        margin: 0 auto;
+        padding:10px;
+    }
+    .login{
+        text-align: right;
+        margin-right: : 20px;
+    }
+    h5{
+        margin-top: 0px;
+        text-align: right;
+    }
+    a{
+        text-decoration: None;
+        color: black;
+        text-align: right;
+    }

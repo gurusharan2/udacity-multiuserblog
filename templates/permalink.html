@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>blog</title>
+</head>
+<style type="text/css">
+	body {
+		font-family: sans-serif;
+		width:800px;
+		margin: 0 auto;
+		padding:10px;
+	}
+	h5{
+		margin-top: 0px;
+		text-align: right;
+	}
+	a{
+		text-decoration: None;
+		color: black;
+		text-align: right;
+	}
+</style>
+<body>
+<a href="/"><h1><center>my blog</center></h1></a>
+<a href="/Newpage"><h3>add a new post</h3></a>
+
+<div >
+<hr>
+
+<h5>{{ posts.created.strftime("%b %d, %Y") }}</h5>
+<h1>{{ posts.title }}</h1>
+<p>{{ posts.post | safe}}</p>
+<h2>posted by {{ posts.posted_by}}</h2>
+<h3>likes : {{posts.likes}}
+
+</div >
+</body>
+</html>

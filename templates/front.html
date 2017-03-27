@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>blog</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style type="text/css">
+
+
+	h5{
+		margin-top: 0px;
+		text-align: right;
+		margin-right: 5px;
+	}
+	a{
+		text-decoration: None;
+		color: black;
+
+	}
+	ul{
+		list-style-type: None;
+	}
+	.addnew{
+		padding-left: 30px;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class = "heading">
+		<h1><center>my blog</center></h1>
+	</div>
+	<div class="row">
+		<div class="col-md-3 addnew"><a href="/Newpage"><h3>add a new post</h3></a></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><a  href="/{{ login }}"><h3 class= "login">{{ login }}</h3></a></div>
+		<div class="col-md-2"><a href="/signup"><h3 class="right">sign up</h3></a></div>
+	</div>
+
+
+
+	<ul>
+		{% for i in posts %}
+		<hr>
+		<li>
+		<div >
+			<hr>
+			<h2>posted by {{ i.posted_by}}</h2>
+			<h5>{{ i.created.strftime("%b %d, %Y")}}</h5>
+			<h3>{{ i.title }}</h3>
+			<p>{{ i.post | safe}}</p>
+			<p>likes: {{ i.likes }}</p>
+			<div>
+			 	<a class="btn btn-default" href="/like/{{i.key().id()}}" role="button">like</a><br>
+			 	<a  class = "btn btn-default" href="/Post_edit/{{i.key().id()}}" role="button">edit post</a>
+				<a  class = "btn btn-default" href="/Post/{{i.key().id()}}" role="button"> delete post</a>
+			</div>
+			<br>
+			<form method="post" id="comment_form" action="/comment/{{i.key().id()}}">
+				<div class="row margin-top">
+					<textarea name="comment_textarea">
+					</textarea>
+					<input type="submit" name="submit" label="submit">
+				</div>
+				<br>
+				<div class = "row">
+
+
+				</div>
+			</form>
+			<ul>
+			<h2>comments</h2>
+			{% for j in comment %}
+
+				<li>
+				{% if i.key().id() == j.post_id %}
+				<p>{{ j.comment }}</p>
+				<p>posted by - {{j.posted_by}}</p>
+				<a  class = "btn btn-default" href="/comment_edit/{{j.key().id()}}" role="button">edit comment</a>
+				<a  class = "btn btn-default" href="/delete/{{j.key().id()}}" role="button"> delete comment</a>
+				{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+		 	</div>
+		</li>
+		{% endfor %}
+	</ul>
+	</div>
+</body>
+</html>

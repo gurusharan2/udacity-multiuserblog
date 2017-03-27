@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Unit 2 Rot 13</title>
+  </head>
+
+  <body>
+  <h1> sign up </h1>
+    <form  method="post">
+    <table>
+      <tr>
+        <td>
+
+            Username:
+
+        </td>
+        <td>
+          <input type="input" name="username" value="{{ username }}">
+        </td>
+        <td>
+          <div style="color : red">{{ error_username }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+
+            password:
+
+        </td>
+        <td>
+          <input type="Password" name="password" value="">
+        </td>
+        <td>
+          <div style="color : red">{{ error_password }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+
+            verify password:
+
+        </td>
+        <td>
+          <input type="Password" name="verify" value="">
+        </td>
+        <td>
+          <div style="color : red">{{ error_verify }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+
+            email:
+
+        </td>
+        <td>
+          <input type="input" name="email" value="{{ email }}">
+        </td>
+        <td>
+          <div style="color : red">{{ error_email }}</div>
+        </td>
+      </tr>
+
+    </table>
+    <button>submit</button>
+    </form>
+    <h5><a href="/login">already a user ?</a></h5>
+  </body>
+
+</html>
