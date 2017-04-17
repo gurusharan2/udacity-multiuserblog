@@ -30,10 +30,10 @@
 		<h1><center>my blog</center></h1>
 	</div>
 	<div class="row">
-		<div class="col-md-3 addnew"><a href="/Newpage"><h3>add a new post</h3></a></div>
+		<div class="col-md-3 addnew"><a href="/blog/Newpage"><h3>add a new post</h3></a></div>
 		<div class="col-md-5"></div>
-		<div class="col-md-2"><a  href="/{{ login }}"><h3 class= "login">{{ login }}</h3></a></div>
-		<div class="col-md-2"><a href="/signup"><h3 class="right">sign up</h3></a></div>
+		<div class="col-md-2"><a  href="/blog/{{ login }}"><h3 class= "login">{{ login }}</h3></a></div>
+		<div class="col-md-2"><a href="/blog/signup"><h3 class="right">sign up</h3></a></div>
 	</div>
 
 
@@ -50,12 +50,12 @@
 			<p>{{ i.post | safe}}</p>
 			<p>likes: {{ i.likes }}</p>
 			<div>
-			 	<a class="btn btn-default" href="/like/{{i.key().id()}}" role="button">like</a><br>
-			 	<a  class = "btn btn-default" href="/Post_edit/{{i.key().id()}}" role="button">edit post</a>
-				<a  class = "btn btn-default" href="/Post/{{i.key().id()}}" role="button"> delete post</a>
+			 	<a class="btn btn-default" href="/blog/like/{{i.key().id()}}" role="button">like</a><br>
+			 	<a  class = "btn btn-default" href="/blog/Post_edit/{{i.key().id()}}" role="button">edit post</a>
+				<a  class = "btn btn-default" href="/blog/Post/{{i.key().id()}}" role="button"> delete post</a>
 			</div>
 			<br>
-			<form method="post" id="comment_form" action="/comment/{{i.key().id()}}">
+			<form method="post" id="comment_form" action="/blog/comment/{{i.key().id()}}">
 				<div class="row margin-top">
 					<textarea name="comment_textarea">
 					</textarea>
@@ -75,8 +75,8 @@
 				{% if i.key().id() == j.post_id %}
 				<p>{{ j.comment }}</p>
 				<p>posted by - {{j.posted_by}}</p>
-				<a  class = "btn btn-default" href="/comment_edit/{{j.key().id()}}" role="button">edit comment</a>
-				<a  class = "btn btn-default" href="/delete/{{j.key().id()}}" role="button"> delete comment</a>
+				<a  class = "btn btn-default" href="/blog/comment_edit/{{j.key().id()}}" role="button">edit comment</a>
+				<a  class = "btn btn-default" href="/blog/delete/{{j.key().id()}}" role="button"> delete comment</a>
 				{% endif %}
 				</li>
 				{% endfor %}
