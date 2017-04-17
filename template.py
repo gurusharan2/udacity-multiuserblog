@@ -95,6 +95,10 @@ def login(username, password):
     else:
         return False
 
+# database
+
+# comment database
+
 
 class Comment_db(db.Model):
     post_id = db.IntegerProperty(required=True)
@@ -102,11 +106,15 @@ class Comment_db(db.Model):
     comment = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
+# user database
+
 
 class User(db.Model):
     username = db.StringProperty(required=True)
     password = db.StringProperty(required=True)
     email = db.StringProperty(required=True)
+
+# blog database
 
 
 class Blog(db.Model):
@@ -116,10 +124,15 @@ class Blog(db.Model):
     posted_by = db.StringProperty(required=True)
     likes = db.IntegerProperty(required=True)
 
+# like database
+
 
 class Like_db(db.Model):
     post_id = db.IntegerProperty(required=True)
     liked_by = db.StringProperty(required=True)
+
+# blog
+# Handler
 
 
 class Handler(webapp2.RequestHandler):
@@ -150,6 +163,8 @@ class Handler(webapp2.RequestHandler):
             return False
         else:
             return True
+
+# signup page
 
 
 class Signup(Handler):
@@ -198,6 +213,8 @@ class Signup(Handler):
             username = self.set_secure_cookie("username", username)
             self.redirect('/blog/welcome')
 
+# welcome page
+
 
 class Welcome(Handler):
 
@@ -207,6 +224,8 @@ class Welcome(Handler):
             self.render('welcome.html', username=username)
         else:
             self.redirect('/blog/signup')
+
+# login
 
 
 class Login(Handler):
@@ -222,6 +241,8 @@ class Login(Handler):
             self.redirect('/blog/welcome')
         else:
             self.render("login.html", error="invalid login")
+
+# logout
 
 
 class Logout(Handler):
@@ -246,6 +267,8 @@ class Mainpage(Handler):
         else:
             login = "login"
         self.render("front.html", posts=posts, login=login, comment=comment)
+
+# like
 
 
 class Like(Handler):
@@ -283,6 +306,8 @@ class Like(Handler):
         else:
             self.render("signup.html")
 
+# Newpage
+
 
 class Newpage(Handler):
 
@@ -311,6 +336,8 @@ class Newpage(Handler):
             self.render_front(
                 title=title, post=post, error="enter the valid details")
 
+# comment submit
+
 
 class Comment_submit(Handler):
 
@@ -325,6 +352,8 @@ class Comment_submit(Handler):
                     post_id=int(post_id), posted_by=current_user, comment=comment)
                 a.put()
                 self.redirect("/blog")
+
+# comment edit
 
 
 class Comment_edit(Handler):
@@ -348,6 +377,8 @@ class Comment_edit(Handler):
         comment_user.put()
         self.redirect("/blog")
 
+# comment delete
+
 
 class Comment_delete(Handler):
 
@@ -362,6 +393,8 @@ class Comment_delete(Handler):
         else:
             self.render(
                 "like.html", error="sorry! but you can edit only your post")
+
+# post edit
 
 
 class Post_edit(Handler):
@@ -385,6 +418,8 @@ class Post_edit(Handler):
         post_id.put()
         self.redirect("/blog")
 
+# post delete
+
 
 class Post_delete(Handler):
 
@@ -394,11 +429,13 @@ class Post_delete(Handler):
         comment_user = db.get(key)
         if comment_user.posted_by == self.read_secure_cookie("username"):
             comment_user.delete()
-            self.render("like.html", error = "post deleted")
+            self.render("like.html", error="post deleted")
             self.redirect("/blog")
         else:
             self.render(
                 "like.html", error="sorry! but you can edit only your post")
+
+# permalink
 
 
 class Peralink(Handler):
