@@ -321,20 +321,23 @@ class Newpage(Handler):
             self.redirect("/blog/login")
 
     def post(self):
-        title = self.request.get("title")
-        post = self.request.get("post")
-        posted_by = self.request.cookies.get("username")
-        username = posted_by.split('|')[0]
-        if title and post:
-            post = post.replace('\n', '<br>')
-            b = 0
-            a = Blog(title=title, post=post, posted_by=username, likes=b)
-            a.put()
-            a_id = a.key().id()
-            self.redirect('/blog/'+str(a_id))
+        if self.check_login():
+            title = self.request.get("title")
+            post = self.request.get("post")
+            posted_by = self.request.cookies.get("username")
+            username = posted_by.split('|')[0]
+            if title and post:
+                post = post.replace('\n', '<br>')
+                b = 0
+                a = Blog(title=title, post=post, posted_by=username, likes=b)
+                a.put()
+                a_id = a.key().id()
+                self.redirect('/blog/'+str(a_id))
+            else:
+                self.render_front(
+                    title=title, post=post, error="enter the valid details")
         else:
-            self.render_front(
-                title=title, post=post, error="enter the valid details")
+            self.redirect("/blog/login")
 
 # comment submit
 
@@ -343,7 +346,7 @@ class Comment_submit(Handler):
 
     def post(self, post_id):
         current_user = self.read_secure_cookie("username")
-        if current_user == "":
+        if current_user:
             self.redirect("/blog/signup")
         else:
             comment = self.request.get('comment_textarea')
@@ -361,21 +364,23 @@ class Comment_edit(Handler):
     def get(self, comment_id):
         a = int(comment_id)
         key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment_user = db.get(key)
-        if comment_user.posted_by == self.read_secure_cookie("username"):
-            self.render("comment_edit.html", a=comment_user)
-        else:
-            self.render(
-                "like.html", error="sorry! but you can edit only your post")
+        comment = db.get(key)
+        if comment:
+            if comment.posted_by == self.read_secure_cookie("username"):
+                self.render("comment_edit.html", a=comment)
+            else:
+                self.render(
+                    "like.html", error="sorry! but you can edit only your post")
 
     def post(self, comment_id):
-        comment = self.request.get('comment_edit')
+        comment_get = self.request.get('comment_edit')
         a = int(comment_id)
         key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment_user = db.get(key)
-        comment_user.comment = comment
-        comment_user.put()
-        self.redirect("/blog")
+        comment_row = db.get(key)
+        if comment_row:
+            comment_row.comment = comment
+            comment_row.put()
+            self.redirect("/blog")
 
 # comment delete
 
@@ -385,14 +390,15 @@ class Comment_delete(Handler):
     def get(self, comment_id):
         a = int(comment_id)
         key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment_user = db.get(key)
-        if comment_user.posted_by == self.read_secure_cookie("username"):
-            comment_user.delete()
-            self.render("like.html", error="comment delete")
-            self.redirect("/blog")
-        else:
-            self.render(
-                "like.html", error="sorry! but you can edit only your post")
+        comment = db.get(key)
+        if comment:
+            if comment.posted_by == self.read_secure_cookie("username"):
+                comment.delete()
+                self.render("like.html", error="comment delete")
+                self.redirect("/blog")
+            else:
+                self.render(
+                    "like.html", error="sorry! but you can edit only your post")
 
 # post edit
 
@@ -402,21 +408,23 @@ class Post_edit(Handler):
     def get(self, post_id):
         a = int(post_id)
         key = db.Key.from_path('Blog', int(post_id), parent=None)
-        post_user = db.get(key)
-        if post_user.posted_by == self.read_secure_cookie("username"):
-            self.render("post_edit.html", a=post_user)
-        else:
-            self.render(
-                "like.html", error="sorry! but you can edit only your post")
+        post = db.get(key)
+        if post:
+            if post.posted_by == self.read_secure_cookie("username"):
+                self.render("post_edit.html", a=post)
+            else:
+                self.render(
+                    "like.html", error="sorry! but you can edit only your post")
 
     def post(self, post_id):
-        post = self.request.get('comment_edit')
+        edited_post = self.request.get('comment_edit')
         a = int(post_id)
         key = db.Key.from_path('Blog', int(post_id), parent=None)
-        post_id = db.get(key)
-        post_id.post = post
-        post_id.put()
-        self.redirect("/blog")
+        post_row = db.get(key)
+        if post_row:
+            post_row.post = edited_post
+            post_row.put()
+            self.redirect("/blog")
 
 # post delete
 
@@ -426,14 +434,15 @@ class Post_delete(Handler):
     def get(self, Post_id):
         a = int(Post_id)
         key = db.Key.from_path('Blog', int(Post_id), parent=None)
-        comment_user = db.get(key)
-        if comment_user.posted_by == self.read_secure_cookie("username"):
-            comment_user.delete()
-            self.render("like.html", error="post deleted")
-            self.redirect("/blog")
-        else:
-            self.render(
-                "like.html", error="sorry! but you can edit only your post")
+        post_row = db.get(key)
+        if post_row:
+            if post_row.posted_by == self.read_secure_cookie("username"):
+                post_row.delete()
+                self.render("like.html", error="post deleted")
+                self.redirect("/blog")
+            else:
+                self.render(
+                    "like.html", error="sorry! but you can edit only your post")
 
 # permalink
 
