@@ -1,6 +1,8 @@
 # udacity-multiuserblog
 <h1> Mulit-User-Blog </h1>
 
+visit: <a>gurusharan-blog.appspot.com/blog</a>
+
 Follow these steps:
 
 Download/Clone all the files on your system<br>
