@@ -1,7 +1,7 @@
 # udacity-multiuserblog
 <h1> Mulit-User-Blog </h1>
 
-visit: <a href="www.gurusharan-blog.appspot.com/blog">click here</a>
+visit: <a href="https://www.gurusharan-blog.appspot.com/blog">click here</a>
 
 <h2>or</h2>
 
