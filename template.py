@@ -7,8 +7,8 @@ import hashlib
 import hmac
 import random
 import string
-secret = "iamsecret"
 from google.appengine.ext import db
+secret = "iamsecret"
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 password_re = re.compile(r"^.{3,20}$")
@@ -267,7 +267,8 @@ class Mainpage(Handler):
         else:
             login = "login"
             signup = "signup"
-        self.render("front.html", posts=posts, login=login, comment=comment,signup=signup)
+        self.render("front.html", posts=posts, login=login,
+                    comment=comment, signup=signup)
 
 # likes
 
@@ -376,7 +377,6 @@ class Comment_edit(Handler):
                         "like.html", error="sorry! but you can edit only your post")
         else:
             self.redirect("/blog/login")
-
 
     def post(self, comment_id):
         curr_user = self.read_secure_cookie("username")
