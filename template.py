@@ -159,10 +159,10 @@ class Handler(webapp2.RequestHandler):
 
     def check_login(self):
         username = self.request.cookies.get("username")
-        if username == "None" or username == "" or username == None:
-            return False
-        else:
+        if username:
             return True
+        else:
+            return False
 
 # signup page
 
@@ -249,7 +249,7 @@ class Logout(Handler):
 
     def get(self):
         self.response.headers.add_header('Set-Cookie',
-                                         'username = ""; Path=/')
+                                         'username =; Path=/')
         self.render("logout.html")
 
 # Mainpage blog
@@ -261,14 +261,15 @@ class Mainpage(Handler):
 
         posts = db.GqlQuery("select * from Blog order by created desc")
         comment = db.GqlQuery("select * from Comment_db order by created asc")
-        print comment
         if self.check_login():
             login = "logout"
+            signup = ""
         else:
             login = "login"
-        self.render("front.html", posts=posts, login=login, comment=comment)
+            signup = "signup"
+        self.render("front.html", posts=posts, login=login, comment=comment,signup=signup)
 
-# like
+# likes
 
 
 class Like(Handler):
@@ -347,14 +348,14 @@ class Comment_submit(Handler):
     def post(self, post_id):
         current_user = self.read_secure_cookie("username")
         if current_user:
-            self.redirect("/blog/signup")
-        else:
             comment = self.request.get('comment_textarea')
             if comment:
                 a = Comment_db(
                     post_id=int(post_id), posted_by=current_user, comment=comment)
                 a.put()
                 self.redirect("/blog")
+        else:
+            self.redirect("/blog/login")
 
 # comment edit
 
@@ -362,88 +363,109 @@ class Comment_submit(Handler):
 class Comment_edit(Handler):
 
     def get(self, comment_id):
-        a = int(comment_id)
-        key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment = db.get(key)
-        if comment:
-            if comment.posted_by == self.read_secure_cookie("username"):
-                self.render("comment_edit.html", a=comment)
-            else:
-                self.render(
-                    "like.html", error="sorry! but you can edit only your post")
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            a = int(comment_id)
+            key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
+            comment = db.get(key)
+            if comment:
+                if comment.posted_by == self.read_secure_cookie("username"):
+                    self.render("comment_edit.html", a=comment)
+                else:
+                    self.render(
+                        "like.html", error="sorry! but you can edit only your post")
+        else:
+            self.redirect("/blog/login")
+
 
     def post(self, comment_id):
-        comment_get = self.request.get('comment_edit')
-        a = int(comment_id)
-        key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment_row = db.get(key)
-        if comment_row:
-            comment_row.comment = comment
-            comment_row.put()
-            self.redirect("/blog")
-
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            comment_get = self.request.get('comment_edit')
+            a = int(comment_id)
+            key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
+            comment_row = db.get(key)
+            if comment_row:
+                comment_row.comment = comment
+                comment_row.put()
+                self.redirect("/blog")
+        else:
+            self.redirect("/blog/login")
 # comment delete
 
 
 class Comment_delete(Handler):
 
     def get(self, comment_id):
-        a = int(comment_id)
-        key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
-        comment = db.get(key)
-        if comment:
-            if comment.posted_by == self.read_secure_cookie("username"):
-                comment.delete()
-                self.render("like.html", error="comment delete")
-                self.redirect("/blog")
-            else:
-                self.render(
-                    "like.html", error="sorry! but you can edit only your post")
-
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            a = int(comment_id)
+            key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
+            comment = db.get(key)
+            if comment:
+                if comment.posted_by == self.read_secure_cookie("username"):
+                    comment.delete()
+                    self.render("like.html", error="comment delete")
+                    self.redirect("/blog")
+                else:
+                    self.render(
+                        "like.html", error="sorry! but you can edit only your post")
+        else:
+            self.redirect("/blog/login")
 # post edit
 
 
 class Post_edit(Handler):
 
     def get(self, post_id):
-        a = int(post_id)
-        key = db.Key.from_path('Blog', int(post_id), parent=None)
-        post = db.get(key)
-        if post:
-            if post.posted_by == self.read_secure_cookie("username"):
-                self.render("post_edit.html", a=post)
-            else:
-                self.render(
-                    "like.html", error="sorry! but you can edit only your post")
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            a = int(post_id)
+            key = db.Key.from_path('Blog', int(post_id), parent=None)
+            post = db.get(key)
+            if post:
+                if post.posted_by == self.read_secure_cookie("username"):
+                    self.render("post_edit.html", a=post)
+                else:
+                    self.render(
+                        "like.html", error="sorry! but you can edit only your post")
+        else:
+            self.redirect("/blog/login")
 
     def post(self, post_id):
-        edited_post = self.request.get('comment_edit')
-        a = int(post_id)
-        key = db.Key.from_path('Blog', int(post_id), parent=None)
-        post_row = db.get(key)
-        if post_row:
-            post_row.post = edited_post
-            post_row.put()
-            self.redirect("/blog")
-
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            edited_post = self.request.get('comment_edit')
+            a = int(post_id)
+            key = db.Key.from_path('Blog', int(post_id), parent=None)
+            post_row = db.get(key)
+            if post_row:
+                post_row.post = edited_post
+                post_row.put()
+                self.redirect("/blog")
+        else:
+            self.redirect("/blog/login")
 # post delete
 
 
 class Post_delete(Handler):
 
     def get(self, Post_id):
-        a = int(Post_id)
-        key = db.Key.from_path('Blog', int(Post_id), parent=None)
-        post_row = db.get(key)
-        if post_row:
-            if post_row.posted_by == self.read_secure_cookie("username"):
-                post_row.delete()
-                self.render("like.html", error="post deleted")
-                self.redirect("/blog")
-            else:
-                self.render(
-                    "like.html", error="sorry! but you can edit only your post")
-
+        curr_user = self.read_secure_cookie("username")
+        if curr_user:
+            a = int(Post_id)
+            key = db.Key.from_path('Blog', int(Post_id), parent=None)
+            post_row = db.get(key)
+            if post_row:
+                if post_row.posted_by == self.read_secure_cookie("username"):
+                    post_row.delete()
+                    self.render("like.html", error="post deleted")
+                    self.redirect("/blog")
+                else:
+                    self.render(
+                        "like.html", error="sorry! but you can edit only your post")
+        else:
+            self.redirect("/blog/login")
 # permalink
 
 
