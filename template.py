@@ -251,6 +251,7 @@ class Logout(Handler):
         self.response.headers.add_header('Set-Cookie',
                                          'username =; Path=/')
         self.render("logout.html")
+        self.redirect("/blog/login")
 
 # Mainpage blog
 
@@ -425,7 +426,7 @@ class Post_edit(Handler):
             post = db.get(key)
             if post:
                 if post.posted_by == self.read_secure_cookie("username"):
-                    self.render("post_edit.html", a=post)
+                    self.render("post_edit.html",login="logout", a=post)
                 else:
                     self.render(
                         "like.html", error="sorry! but you can edit only your post")

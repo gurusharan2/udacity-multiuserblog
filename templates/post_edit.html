@@ -1,13 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>blog</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
+<style type="text/css">
+
+
+    h5{
+        margin-top: 0px;
+        text-align: right;
+        margin-right: 5px;
+    }
+    a{
+        text-decoration: None;
+        color: black;
+
+    }
+    ul{
+        list-style-type: None;
+    }
+    .addnew{
+        padding-left: 30px;
+    }
+</style>
 <body>
+    <div class="container">
+    <h1><center>my blog</center></h1>
+    <div class="row">
+        <div class="col-md-3 addnew"><a href="/blog/Newpage"><h3>add a new post</h3></a></div>
+        <div class="col-md-5"></div>
+        <div class="col-md-2"><a  href="/blog/{{ login }}"><h3 class= "login">{{ login }}</h3></a></div>
+        <div class="col-md-2"><a href="/blog/signup"><h3 class="right">{{ signup }}</h3></a></div>
+    </div>
+    <hr>
     <form method="post">
     <input type="input" name="comment_edit" value="{{a.post}}">
     <input type="submit" name="submit" label="submit">
     </form>
     <a class ="btn btn-default" href="/blog">cancel</a>
+    </div>
 </body>
 </html>
