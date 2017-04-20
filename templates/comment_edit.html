@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div>
     <form method="post">
     <input type="input" name="comment_edit" value="{{a.comment}}">
     <input type="submit" name="submit" label="submit">
     </form>
     <a class ="btn btn-default" href="/blog">cancel</a>
-</body>
-</html>
+</div>
+{% endblock %}

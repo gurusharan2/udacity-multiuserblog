@@ -1,41 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>blog</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<style type="text/css">
+{% extends "base.html" %}
 
-
-	h5{
-		margin-top: 0px;
-		text-align: right;
-		margin-right: 5px;
-	}
-	a{
-		text-decoration: None;
-		color: black;
-
-	}
-	ul{
-		list-style-type: None;
-	}
-	.addnew{
-		padding-left: 30px;
-	}
-</style>
-<body>
-	<div class="container">
-		<div class = "heading">
-		<h1><center>my blog</center></h1>
-	</div>
-	<div class="row">
-		<div class="col-md-3 addnew"><a href="/blog/Newpage"><h3>add a new post</h3></a></div>
-		<div class="col-md-5"></div>
-		<div class="col-md-2"><a  href="/blog/{{ login }}"><h3 class= "login">{{ login }}</h3></a></div>
-		<div class="col-md-2"><a href="/blog/signup"><h3 class="right">{{ signup }}</h3></a></div>
-	</div>
-
+{% block content %}
 
 
 	<ul>
@@ -86,6 +51,5 @@
 		</li>
 		{% endfor %}
 	</ul>
-	</div>
-</body>
-</html>
+{% endblock %}
+

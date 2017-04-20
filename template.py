@@ -158,7 +158,7 @@ class Handler(webapp2.RequestHandler):
         return cookie_val and check_secure_val(cookie_val)
 
     def check_login(self):
-        username = self.request.cookies.get("username")
+        username = self.read_secure_cookie("username")
         if username:
             return True
         else:
@@ -286,7 +286,8 @@ class Like(Handler):
                 self.render("like.html", error="cannot like your own post")
             else:
                 all_likes = db.GqlQuery(
-                    "select * from Like_db where post_id =:post_id", post_id=int(post_id))
+                    "select * from Like_db where post_id =:post_id",
+                     post_id=int(post_id))
                 flag = 0
                 if post.likes != 0:
                     likes = all_likes.get()
@@ -353,7 +354,9 @@ class Comment_submit(Handler):
             comment = self.request.get('comment_textarea')
             if comment:
                 a = Comment_db(
-                    post_id=int(post_id), posted_by=current_user, comment=comment)
+                    post_id=int(post_id),
+                    posted_by=current_user,
+                    comment=comment)
                 a.put()
                 self.redirect("/blog")
         else:
@@ -375,7 +378,8 @@ class Comment_edit(Handler):
                     self.render("comment_edit.html", a=comment)
                 else:
                     self.render(
-                        "like.html", error="sorry! but you can edit only your post")
+                        "like.html",
+                         error="sorry! but you can edit only your post")
         else:
             self.redirect("/blog/login")
 
@@ -386,7 +390,7 @@ class Comment_edit(Handler):
             a = int(comment_id)
             key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
             comment_row = db.get(key)
-            if comment_row:
+            if comment_row.posted_by == self.read_secure_cookie("username"):
                 comment_row.comment = comment
                 comment_row.put()
                 self.redirect("/blog")
@@ -410,7 +414,8 @@ class Comment_delete(Handler):
                     self.redirect("/blog")
                 else:
                     self.render(
-                        "like.html", error="sorry! but you can edit only your post")
+                        "like.html",
+                         error="sorry! but you can edit only your post")
         else:
             self.redirect("/blog/login")
 # post edit
@@ -422,14 +427,18 @@ class Post_edit(Handler):
         curr_user = self.read_secure_cookie("username")
         if curr_user:
             a = int(post_id)
-            key = db.Key.from_path('Blog', int(post_id), parent=None)
+            key = db.Key.from_path('Blog',
+                int(post_id),
+                parent=None)
             post = db.get(key)
             if post:
                 if post.posted_by == self.read_secure_cookie("username"):
-                    self.render("post_edit.html",login="logout", a=post)
+                    self.render("post_edit.html",
+                     login="logout", a=post)
                 else:
                     self.render(
-                        "like.html", error="sorry! but you can edit only your post")
+                        "like.html",
+                        error="sorry! but you can edit only your post")
         else:
             self.redirect("/blog/login")
 
@@ -440,7 +449,7 @@ class Post_edit(Handler):
             a = int(post_id)
             key = db.Key.from_path('Blog', int(post_id), parent=None)
             post_row = db.get(key)
-            if post_row:
+            if post_row.posted_by == self.read_secure_cookie("username"):
                 post_row.post = edited_post
                 post_row.put()
                 self.redirect("/blog")
@@ -464,7 +473,8 @@ class Post_delete(Handler):
                     self.redirect("/blog")
                 else:
                     self.render(
-                        "like.html", error="sorry! but you can edit only your post")
+                        "like.html",
+                         error="sorry! but you can edit only your post")
         else:
             self.redirect("/blog/login")
 # permalink
