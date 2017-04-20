@@ -390,10 +390,11 @@ class Comment_edit(Handler):
             a = int(comment_id)
             key = db.Key.from_path('Comment_db', int(comment_id), parent=None)
             comment_row = db.get(key)
-            if comment_row.posted_by == self.read_secure_cookie("username"):
-                comment_row.comment = comment
-                comment_row.put()
-                self.redirect("/blog")
+            if comment_row:
+                if comment_row.posted_by == self.read_secure_cookie("username"):
+                    comment_row.comment = comment
+                    comment_row.put()
+                    self.redirect("/blog")
         else:
             self.redirect("/blog/login")
 # comment delete
@@ -449,10 +450,11 @@ class Post_edit(Handler):
             a = int(post_id)
             key = db.Key.from_path('Blog', int(post_id), parent=None)
             post_row = db.get(key)
-            if post_row.posted_by == self.read_secure_cookie("username"):
-                post_row.post = edited_post
-                post_row.put()
-                self.redirect("/blog")
+            if post_row:
+                if post_row.posted_by == self.read_secure_cookie("username"):
+                    post_row.post = edited_post
+                    post_row.put()
+                    self.redirect("/blog")
         else:
             self.redirect("/blog/login")
 # post delete
